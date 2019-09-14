@@ -1,0 +1,62 @@
+<div class="mat-elevation-z8">
+  <div class="content">
+    <form [formGroup]="contactForm">
+      <h1 mat-dialog-title *ngIf="contact.name">{{contact.name}} Info</h1>
+      <h1 mat-dialog-title *ngIf="!contact.name">Add New Contact</h1>
+      <hr>
+      <div style="padding: 10px">
+        <mat-form-field>
+          <input matInput autocomplete="off" formControlName="name" placeholder="Name">
+          <mat-error *ngFor="let validation of contact_validation_messages.name">
+            <mat-error
+              *ngIf="contactForm.get('name').hasError(validation.type) && (contactForm.get('name').dirty || contactForm.get('name').touched)">
+              {{validation.message}}</mat-error>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput autocomplete="off" formControlName="email" placeholder="Email">
+          <mat-error *ngFor="let validation of contact_validation_messages.email">
+            <mat-error
+              *ngIf="contactForm.get('email').hasError(validation.type) && (contactForm.get('email').dirty || contactForm.get('email').touched)">
+              {{validation.message}}</mat-error>
+          </mat-error>
+        </mat-form-field>
+        <div formArrayName="phones">
+          <div *ngFor="let phone of contactForm.get('phones').controls; let phoneIndex = index"
+            [formGroupName]="phoneIndex">
+            <mat-form-field>
+              <input matInput autocomplete="off" formControlName="number" placeholder="Phone Number">
+              <mat-error *ngFor="let validation of contact_validation_messages.phoneNumber">
+                <mat-error *ngIf="phone.get('number').hasError(validation.type) && (phone.get('number').dirty || phone.get('number').touched)">{{validation.message}}</mat-error>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-select formControlName="label" placeholder="Label">
+                  <mat-option value="select">Select ..</mat-option>
+                <mat-option *ngFor="let label of labels" [value]="label.labelName">
+                  {{label.labelName}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngFor="let validation of contact_validation_messages.phoneLabel">
+                  <mat-error *ngIf="phone.get('label').hasError(validation.type) && (phone.get('label').dirty || phone.get('label').touched)">{{validation.message}}</mat-error>
+                </mat-error>
+            </mat-form-field>
+            <mat-icon color="primary" (click)="deletePhone(phoneIndex)" style="cursor: pointer;">delete_forever</mat-icon>
+          </div>
+        </div>
+        <button mat-raised-button color="primary" (click)="addPhone()">
+          <mat-icon>control_point</mat-icon> <label> Add new Phone </label>
+        </button>                                                                                          
+      </div>
+      <div class="actions">
+        <button mat-raised-button color="primary" (click)="save()"
+          [disabled]="contactForm.invalid || !contactForm.dirty">
+          <mat-icon>save</mat-icon> <label> Save </label>
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="cancel()">
+          <mat-icon>cancel</mat-icon> <label> Cancel </label>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
